@@ -34,6 +34,30 @@ const PING_RESPONSE: ResponseObject = {
   },
 };
 
+const HELLO_RESPONSE: ResponseObject = {
+  description: 'Ping Response',
+  content: {
+    'application/json': {
+      schema: {
+        type: 'object',
+        title: 'PingResponse',
+        properties: {
+          greeting: {type: 'string'},
+          date: {type: 'string'},
+          url: {type: 'string'},
+          headers: {
+            type: 'object',
+            properties: {
+              'Content-Type': {type: 'string'},
+            },
+            additionalProperties: true,
+          },
+        },
+      },
+    },
+  },
+};
+
 /**
  * A simple controller to bounce back http requests
  */
@@ -45,6 +69,17 @@ export class PingController {
   @response(200, PING_RESPONSE)
   ping(): object {
     // Reply with a greeting, the current time, the url, and request headers
+    return {
+      greeting: 'Hello from LoopBack',
+      date: new Date(),
+      url: this.req.url,
+      headers: Object.assign({}, this.req.headers),
+    };
+  }
+
+  @get('/hello')
+  @response(200, HELLO_RESPONSE)
+  hello(): object {
     return {
       greeting: 'Hello from LoopBack',
       date: new Date(),
